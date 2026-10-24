@@ -1,33 +1,59 @@
 server:
-  port: 8081  # Admin Server port
+  port: 8081
 
 spring:
   application:
-    name: sever-Admin  # Unique service name for Eureka
+    name: ServerAdmin
   boot:
     admin:
       ui:
-        title: "Admin Dashboard"  # Optional
+        title: "ServerAdmin Dashboard"
+      discovery:
+        converter:
+          management-context-path: /actuator
   security:
     user:
       name: admin
-      password: admin  # Use this for secured access
+      password: admin
+
+info:
+  app:
+    name: ServerAdmin
+    type: monitoring
+    port: 8081
 
 eureka:
   client:
     service-url:
-      # defaultZone: http://192.168.1.177:8761/eureka/  # Old Eureka Server URL (commented)
-      defaultZone: http://localhost:8761/eureka/  # New Eureka Server URL
+      defaultZone: http://localhost:8761/eureka/
     register-with-eureka: true
     fetch-registry: true
   instance:
-    prefer-ip-address: true  # Registers with IP instead of hostname
+    hostname: localhost
+    prefer-ip-address: false
+    instance-id: ServerAdmin:8081
+    metadata-map:
+      unique-name: ServerAdmin
+      service-type: monitoring
+      port: 8081
 
 management:
   endpoints:
     web:
       exposure:
-        include: "*"  # Expose all actuator endpoints
+        include: "*"
   endpoint:
     health:
       show-details: always
+    info:
+      enabled: true
+  info:
+    env:
+      enabled: true
+    java:
+      enabled: true
+    os:
+      enabled: true
+  metrics:
+    tags:
+      application: ServerAdmin
